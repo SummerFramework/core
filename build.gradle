@@ -1,7 +1,7 @@
 apply plugin: 'java'
 
-group 'org.summerframework'
-archivesBaseName = "summer-core"
+group 'com.github.summerframework'
+archivesBaseName = "core"
 version '1.0.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
