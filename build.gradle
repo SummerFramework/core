@@ -1,0 +1,33 @@
+apply plugin: 'java'
+
+group 'org.summerframework'
+archivesBaseName = "summer-core"
+version '1.0.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    springVersion  = '4.2.5.RELEASE'
+    jacksonVersion = '2.6.5'
+}
+
+dependencies {
+
+    compile "javax.servlet:javax.servlet-api:3.1.0"
+
+    compile "org.springframework.data:spring-data-jpa:1.9.4.RELEASE"
+
+    compile "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
+    compile "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
+    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+
+    compile "javax.transaction:javax.transaction-api:1.2"
+    compile "javax.validation:validation-api:1.1.0.Final"
+
+    compile "org.hibernate:hibernate-entitymanager:4.3.11.Final"
+    compile "org.hibernate:hibernate-validator:5.2.4.Final"
+}
