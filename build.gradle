@@ -1,25 +1,35 @@
 apply plugin: 'java'
 
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+
+            pom.withXml {
+                asNode().dependencies.'*'.findAll() {
+                    it.scope.text() == 'runtime' && project.configurations.compile.allDependencies.find { dep ->
+                        dep.name == it.artifactId.text()
+                    }
+                }.each() {
+                    it.scope*.value = 'compile'
+                }
+            }
+        }
+    }
+}
+
+
+
 group 'com.github.summerframework'
 archivesBaseName = "core"
 version '1.0.0-SNAPSHOT'
-
-sourceCompatibility = 1.8
-
-repositories {
-    mavenCentral()
-}
-
-ext {
-    springVersion  = '4.2.5.RELEASE'
-    jacksonVersion = '2.6.5'
-}
 
 dependencies {
 
     compile "javax.servlet:javax.servlet-api:3.1.0"
 
-    compile "org.springframework.data:spring-data-jpa:1.9.4.RELEASE"
+    compile "org.springframework.data:spring-data-jpa:1.10.1.RELEASE"
+    compile "org.springframework:spring-test:$springVersion"
 
     compile "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
     compile "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"

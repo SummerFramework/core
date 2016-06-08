@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -42,25 +43,33 @@ public class BaseJpaRepositoryImp<T, ID extends Serializable> extends SimpleJpaR
             return null;
         }
 
-        final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        final Class javaType = entityInformation.getJavaType();
-        final CriteriaQuery<T> criteriaQuery = builder.createQuery(javaType);
-        final Root<T> root = criteriaQuery.from(javaType);
-        criteriaQuery.select(root);
-        criteriaQuery.where( builder.equal(root.get(DomainEntity.UUID),uuid));
-        final TypedQuery<T> query = this.entityManager.createQuery(criteriaQuery);
-        return query.getSingleResult();
+        try{
+            final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+            final Class javaType = entityInformation.getJavaType();
+            final CriteriaQuery<T> criteriaQuery = builder.createQuery(javaType);
+            final Root<T> root = criteriaQuery.from(javaType);
+            criteriaQuery.select(root);
+            criteriaQuery.where( builder.equal(root.get(DomainEntity.UUID),uuid));
+            final TypedQuery<T> query = this.entityManager.createQuery(criteriaQuery);
+            return query.getSingleResult();
+        }catch (NoResultException e){
+            return null;
+        }
     }
 
     @Override
     public List<T> findActives() {
-        final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        final Class javaType = entityInformation.getJavaType();
-        final CriteriaQuery<T> criteriaQuery = builder.createQuery(javaType);
-        final Root<T> root = criteriaQuery.from(javaType);
-        criteriaQuery.select(root);
-        criteriaQuery.where( builder.equal(root.get(DomainEntity.ACTIVE), true));
-        return this.entityManager.createQuery(criteriaQuery).getResultList();
+        try{
+            final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+            final Class javaType = entityInformation.getJavaType();
+            final CriteriaQuery<T> criteriaQuery = builder.createQuery(javaType);
+            final Root<T> root = criteriaQuery.from(javaType);
+            criteriaQuery.select(root);
+            criteriaQuery.where( builder.equal(root.get(DomainEntity.ACTIVE), true));
+            return this.entityManager.createQuery(criteriaQuery).getResultList();
+        }catch (NoResultException e){
+            return null;
+        }
     }
 
     @Override
@@ -84,7 +93,7 @@ public class BaseJpaRepositoryImp<T, ID extends Serializable> extends SimpleJpaR
         query.setFirstResult(pageable.getOffset());
         query.setMaxResults(pageable.getPageSize());
 
-        return new PageImpl<T>(query.getResultList(), pageable,total);
+        return new PageImpl(query.getResultList(), pageable,total);
     }
 
     private Long getQueryCountEntity(String query) {

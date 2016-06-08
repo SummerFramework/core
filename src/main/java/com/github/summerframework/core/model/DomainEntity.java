@@ -34,9 +34,9 @@ public abstract class DomainEntity implements Serializable {
 	@Column( name = "id" )
 	@JsonIgnore
 	public Long id;
-	
+
     @Column(name = "uuid", nullable = false, updatable = false)
-    private String uuid = java.util.UUID.randomUUID().toString();	
+    private String uuid = java.util.UUID.randomUUID().toString();
 	
 	/**
 	 * Data e hora da criação deste conteúdo no sistema.
@@ -82,11 +82,11 @@ public abstract class DomainEntity implements Serializable {
 	public String getUUID() {
 		return uuid;
 	}
-	
+
 	public void generateUUID (){
 		this.uuid = java.util.UUID.randomUUID().toString();
 	}
-	
+
 	protected void setUUID ( String uuid ){
 		this.uuid = uuid;
 	}
